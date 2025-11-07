@@ -584,6 +584,19 @@ async function initializeServices() {
     logger?.warn('App will continue without pre-initialized Claude manager. Claude panels will initialize on first use.');
     defaultCliManager = null;
   }
+
+  // Validate that Claude Code is available - it's required for core functionality
+  if (!defaultCliManager) {
+    const errorMsg = 'Claude Code is not available. Please ensure Claude Code is properly installed and accessible.';
+    logger?.error(errorMsg);
+    dialog.showErrorBox(
+      'Claude Code Required',
+      `${errorMsg}\n\nCrystal requires Claude Code to function. Please install Claude Code and try again.`
+    );
+    app.quit();
+    return;
+  }
+
   gitDiffManager = new GitDiffManager();
   gitStatusManager = new GitStatusManager(sessionManager, worktreeManager, gitDiffManager, logger);
   executionTracker = new ExecutionTracker(sessionManager, gitDiffManager);
