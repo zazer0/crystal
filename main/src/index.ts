@@ -572,12 +572,18 @@ async function initializeServices() {
   cliManagerFactory = CliManagerFactory.getInstance(logger, configManager);
   
   // Create default CLI manager (Claude) with permission IPC path
-  defaultCliManager = await cliManagerFactory.createManager('claude', {
-    sessionManager,
-    logger,
-    configManager,
-    additionalOptions: { permissionIpcPath }
-  });
+  try {
+    defaultCliManager = await cliManagerFactory.createManager('claude', {
+      sessionManager,
+      logger,
+      configManager,
+      additionalOptions: { permissionIpcPath }
+    });
+  } catch (error) {
+    logger?.warn(`Failed to initialize default Claude manager: ${error instanceof Error ? error.message : String(error)}`);
+    logger?.warn('App will continue without pre-initialized Claude manager. Claude panels will initialize on first use.');
+    defaultCliManager = null;
+  }
   gitDiffManager = new GitDiffManager();
   gitStatusManager = new GitStatusManager(sessionManager, worktreeManager, gitDiffManager, logger);
   executionTracker = new ExecutionTracker(sessionManager, gitDiffManager);
