@@ -456,8 +456,9 @@ export abstract class AbstractCliManager extends EventEmitter {
       return this.availabilityCache.result;
     }
 
-    // Perform fresh check
-    const availability = await this.testCliAvailability();
+    // Perform fresh check - pass custom path from config if available
+    const customPath = this.configManager?.getConfig()?.claudeExecutablePath;
+    const availability = await this.testCliAvailability(customPath);
 
     // Cache the result
     this.availabilityCache = {
