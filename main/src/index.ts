@@ -71,7 +71,7 @@ let logger: Logger;
 let sessionManager: SessionManager;
 let worktreeManager: WorktreeManager;
 let cliManagerFactory: CliManagerFactory;
-let defaultCliManager: AbstractCliManager;
+let defaultCliManager: AbstractCliManager | null;
 let gitDiffManager: GitDiffManager;
 let gitStatusManager: GitStatusManager;
 let executionTracker: ExecutionTracker;
